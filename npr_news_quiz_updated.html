@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NPR News Quiz</title>
+<style>
+:root{
+  --purple:#6d28d9;
+  --deep:#2e1065;
+  --violet:#8b5cf6;
+  --lavender:#f3e8ff;
+  --yellow:#facc15;
+  --ink:#241b2f;
+  --muted:#756b80;
+  --white:#fff;
+  --green:#15803d;
+  --red:#b91c1c;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--ink);
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 8% 8%,rgba(139,92,246,.22),transparent 25%),
+    radial-gradient(circle at 92% 18%,rgba(250,204,21,.18),transparent 20%),
+    linear-gradient(135deg,#faf7ff 0%,#f0e7ff 52%,#fff9ed 100%);
+}
+header{
+  position:relative;
+  overflow:hidden;
+  color:white;
+  padding:30px 20px 34px;
+  background:linear-gradient(135deg,#2e1065 0%,#6d28d9 62%,#8b5cf6 100%);
+  border-bottom:5px solid var(--yellow);
+  box-shadow:0 8px 30px rgba(46,16,101,.22);
+}
+header:before{
+  content:"NEWS • NEWS • NEWS • NEWS • NEWS";
+  position:absolute;
+  right:-40px;
+  bottom:7px;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:3px;
+  opacity:.12;
+  transform:rotate(-7deg);
+}
+.brand{
+  position:relative;
+  max-width:850px;
+  margin:auto;
+}
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.25);
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:.5px;
+  margin-bottom:13px;
+}
+header h1{margin:0 0 8px;font-size:clamp(2rem,5vw,3rem);line-height:1.05;letter-spacing:-1px}
+header p{margin:0;opacity:.94;font-size:1.05rem}
+header .sub{margin-top:10px;font-size:.92rem;opacity:.78;max-width:650px;line-height:1.5}
+main{max-width:850px;margin:25px auto;padding:0 16px 10px}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:17px;
+}
+.progress-pill,.score-pill{
+  background:rgba(255,255,255,.85);
+  border:1px solid rgba(109,40,217,.13);
+  border-radius:999px;
+  padding:10px 15px;
+  box-shadow:0 5px 18px rgba(59,7,100,.08);
+  font-weight:850;
+}
+.progress-pill{color:var(--purple)}
+.score-pill{color:var(--deep)}
+.progress-track{
+  height:8px;
+  background:#e9d5ff;
+  border-radius:99px;
+  margin:-5px 0 18px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  width:10%;
+  background:linear-gradient(90deg,var(--purple),var(--violet),var(--yellow));
+  border-radius:99px;
+  transition:width .35s ease;
+}
+.card{
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(109,40,217,.12);
+  border-radius:26px;
+  box-shadow:0 18px 45px rgba(59,7,100,.13);
+  overflow:hidden;
+}
+.card-top{
+  padding:18px 25px 12px;
+  border-bottom:1px solid #eee6f6;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:var(--lavender);
+  color:var(--purple);
+  font-weight:900;
+  padding:7px 11px;
+  border-radius:999px;
+  font-size:.78rem;
+}
+.live-dot{
+  width:8px;height:8px;border-radius:50%;background:#ef4444;
+  box-shadow:0 0 0 4px #fee2e2;
+}
+.eyebrow{font-size:.78rem;color:var(--muted);font-weight:800}
+.card-body{padding:26px}
+.headline{
+  font-size:clamp(1.35rem,3.4vw,1.75rem);
+  line-height:1.32;
+  margin:0 0 23px;
+  letter-spacing:-.35px;
+}
+.choices{display:grid;gap:12px}
+button.choice{
+  width:100%;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  text-align:left;
+  padding:15px 16px;
+  border:2px solid #e7dff0;
+  background:#fff;
+  color:var(--ink);
+  border-radius:16px;
+  font-size:1rem;
+  line-height:1.35;
+  cursor:pointer;
+  transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease,background .12s ease;
+}
+button.choice:hover{
+  transform:translateY(-2px);
+  border-color:var(--violet);
+  background:#fbf9ff;
+  box-shadow:0 7px 18px rgba(109,40,217,.1);
+}
+.choice-letter{
+  flex:0 0 29px;
+  height:29px;
+  display:grid;
+  place-items:center;
+  border-radius:9px;
+  background:#f3e8ff;
+  color:var(--purple);
+  font-weight:900;
+  font-size:.85rem;
+}
+.correct{border-color:var(--green)!important;background:#ecfdf3!important;transform:none!important}
+.correct .choice-letter{background:#dcfce7;color:var(--green)}
+.wrong{border-color:var(--red)!important;background:#fef2f2!important;transform:none!important}
+.wrong .choice-letter{background:#fee2e2;color:var(--red)}
+.feedback{
+  margin-top:20px;
+  padding:19px;
+  border-radius:17px;
+  display:none;
+  position:relative;
+}
+.feedback.show{display:block}
+.feedback.correctBox{background:#ecfdf3;border:1px solid #86efac}
+.feedback.wrongBox{background:#fef2f2;border:1px solid #fca5a5}
+.feedback strong{display:block;font-size:1.12rem;margin-bottom:7px}
+.feedback p{margin:0;line-height:1.55}
+.source{margin-top:11px}
+.source a{color:var(--purple);font-weight:900;text-decoration:none}
+.source a:hover{text-decoration:underline}
+.next{
+  margin-top:18px;
+  background:linear-gradient(135deg,var(--purple),var(--violet));
+  color:white;
+  border:0;
+  border-radius:13px;
+  padding:13px 20px;
+  font-weight:900;
+  cursor:pointer;
+  display:none;
+  box-shadow:0 7px 18px rgba(109,40,217,.25);
+}
+.next:hover{transform:translateY(-1px)}
+.next.show{display:inline-block}
+.result{
+  padding:35px 25px;
+  text-align:center;
+  display:none;
+  background:rgba(255,255,255,.96);
+  border-radius:26px;
+  box-shadow:0 18px 45px rgba(59,7,100,.13);
+}
+.result.show{display:block}
+.result-badge{font-size:3rem;margin-bottom:4px}
+.result h2{margin:0 0 7px;font-size:2rem}
+.bigscore{font-size:3.5rem;font-weight:950;color:var(--purple);margin:6px 0}
+.restart{
+  background:var(--deep);
+  color:white;border:0;border-radius:13px;
+  padding:13px 22px;font-weight:900;cursor:pointer;
+}
+.legal{
+  max-width:850px;margin:17px auto 28px;padding:20px 22px;
+  color:var(--muted);font-size:.76rem;line-height:1.55;text-align:center;
+}
+.legal strong{color:var(--deep);font-size:.88rem}
+@media(max-width:600px){
+  header{padding:25px 17px 29px}
+  main{margin-top:18px}
+  .topbar{gap:8px}.progress-pill,.score-pill{padding:9px 12px;font-size:.86rem}
+  .card-top{padding:15px 18px 10px}
+  .card-body{padding:20px 17px}
+  button.choice{padding:13px}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">
+  <div class="kicker">🗞️ NEWS ENGAGEMENT DAY</div>
+  <h1>NPR News Quiz</h1>
+  <p>Test your knowledge. Think critically. Stay informed.</p>
+  <p class="sub">Turn today's headlines into a quick challenge. Learn the story behind the story — and see what you know.</p>
+</div>
+</header>
+<main>
+<div class="topbar">
+  <div class="progress-pill" id="progress">Question 1 of 10</div>
+  <div class="score-pill" id="score">⭐ Score: 0</div>
+</div>
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+<section class="card" id="quizCard">
+<div class="card-top"><div class="tag"><span class="live-dot"></span> NEWS QUIZ</div><div class="eyebrow">Read it. Know it. Talk about it.</div></div>
+<div class="card-body"><h2 class="headline" id="question"></h2><div class="choices" id="choices"></div>
+<div class="feedback" id="feedback"><strong id="feedbackTitle"></strong><div id="feedbackText"></div><div class="source" id="source"></div></div>
+<button class="next" id="nextBtn">Next Question →</button></div>
+</section>
+<section class="result" id="result"><div class="result-badge">🎉</div><h2>Quiz Complete!</h2><div class="bigscore" id="finalScore"></div><p id="finalMessage"></p><button class="restart" onclick="startQuiz()">Take Quiz Again</button></section>
+</main>
+
+<footer class="legal">
+<p><strong>News Engagement Day • Legal &amp; Attribution</strong></p>
+<p>This is an independent educational project created to encourage News Engagement Day participation, news literacy and informed discussion. It is not affiliated with, sponsored by, or endorsed by NPR.</p>
+<p>NPR® and NPR.org are trademarks and/or property of their respective owners. This app does not claim ownership of NPR's name, branding, reporting, or other intellectual property.</p>
+<p>Quiz questions are original summaries designed to encourage engagement with news, critical thinking and understanding of current events. They are not reproduced from NPR articles. For complete information, context and attribution, please visit the original reporting at NPR.org.</p>
+<p>News information can change. Always consult the original source for the most current and complete information.</p>
+</footer>
+
+<script>
+const questions=[
+{q:"What does a monthly jobs report help economists understand?",choices:["The condition of the labor market, including hiring and wage trends","How many people voted in the last election","How much rainfall a country received","Which movies are most popular"],answer:0,explanation:"Jobs reports provide information about employment, unemployment and wages. These measures help economists understand the strength and direction of the labor market.",source:"NPR: Jobs report",url:"https://www.npr.org/2025/06/06/nx-s1-5424706/may-jobs-report"},
+{q:"Why do economists pay attention to wage growth when studying the economy?",choices:["Wages affect how much income workers have available to spend","Wages determine the number of seats in Congress","Wages tell scientists how fast the planet is warming","Wages determine whether a country can join the Olympics"],answer:0,explanation:"Wage growth matters because changes in pay affect workers' purchasing power. Comparing wage growth with prices can also help show whether people's incomes are keeping up with the cost of living.",source:"NPR: Jobs and wages",url:"https://www.npr.org/2025/06/06/nx-s1-5424706/may-jobs-report"},
+{q:"What is the purpose of an independent review after a failed execution?",choices:["To investigate what happened and identify problems that may need to be addressed","To automatically overturn every death sentence","To replace the state's court system","To determine the winner of an election"],answer:0,explanation:"An independent review is intended to examine the circumstances surrounding an incident and determine what went wrong.",source:"NPR Investigations: Execution reporting",url:"https://media-s1.dev.npr.org/sections/investigations/"},
+{q:"What does it mean when a country's political center is described as fighting for relevance?",choices:["Parties closer to the political middle are trying to maintain support as more voters move toward opposing political extremes","The country is eliminating all political parties","The government is moving its capital to another city","Voters are no longer allowed to discuss politics"],answer:0,explanation:"The phrase describes competition for voters between more moderate political forces and parties farther to the ideological left or right.",source:"NPR: Portugal's political landscape",url:"https://www.npr.org/2025/05/20/nx-s1-5404345/portugal-election-uncertainty-minority-government"},
+{q:"What is one major question governments face when designing foreign-aid programs?",choices:["Which goals the aid should accomplish and how resources should be used","Whether all countries should receive exactly the same amount","Whether foreign aid should be counted as weather data","Whether aid should be used to choose a country's sports teams"],answer:0,explanation:"Foreign aid is a policy tool. Governments have to decide what objectives they want to pursue, which programs or countries to support, and how to evaluate whether assistance is working.",source:"NPR: USAID and foreign aid",url:"https://www.npr.org/sections/goats-and-soda/2025/02/26/nx-s1-5310673/usaid-trump-administration-global-health"},
+{q:"Why can testimony from people who worked inside an intelligence system be significant to journalists and the public?",choices:["It can provide firsthand information about how systems and decisions operated","It automatically proves every claim made by the speakers","It replaces the need for any other reporting","It can only be used for entertainment"],answer:0,explanation:"Firsthand testimony can provide information that may be difficult to obtain from outside an organization. Journalists still have to verify and contextualize those accounts.",source:"NPR: Whistleblower testimony and intelligence",url:"https://apps.npr.org/whistleblower-annotation/"},
+{q:"What is the International Space Station primarily used for?",choices:["Scientific research and experiments in a microgravity environment","Commercial airline travel between countries","Broadcasting every television channel on Earth","Storing weather records on behalf of every country"],answer:0,explanation:"The International Space Station is a laboratory in orbit where astronauts conduct scientific research and technology demonstrations.",source:"NPR: The International Space Station",url:"https://www.npr.org/2024/02/21/1232639289/international-space-station-retirement-space-stations-future"},
+{q:"Why is putting advanced computer chips on satellites potentially useful for artificial-intelligence research?",choices:["It could allow some computing and data processing to happen in space","It would eliminate the need for computers on Earth","It would make satellites travel underwater","It would guarantee that every AI system is accurate"],answer:0,explanation:"AI systems require significant computing power. Projects involving computing hardware in space explore whether satellites could process data or run computational workloads beyond traditional ground-based data centers.",source:"NPR: AI data centers in space",url:"https://www.npr.org/2026/04/03/nx-s1-5718416/big-techs-next-move-is-to-put-data-centers-in-space-can-it-work"},
+{q:"What is one reason journalists include context and background in a news story?",choices:["To help readers understand why an event matters and how it connects to earlier developments","To make the story impossible to verify","To replace factual reporting with opinion","To avoid explaining what happened"],answer:0,explanation:"Context helps audiences understand significance. Good explanatory journalism connects a current event with relevant history, evidence and background without confusing reporting with opinion.",source:"NPR Public Editor: History and context in journalism",url:"https://www.northcountrypublicradio.org/news/npr/g-s1-94524/how-well-does-npr-incorporate-history-into-its-journalism"},
+{q:"Why should readers check the original reporting behind a news-quiz question?",choices:["A quiz gives only part of the information, while the original report provides fuller context and evidence","The original story always has a different answer","Quiz questions are never based on real reporting","Reading the original story prevents you from learning the answer"],answer:0,explanation:"A quiz question necessarily simplifies a larger story. Reading the original reporting lets you examine the evidence, details and context for yourself.",source:"NPR Training: Accuracy and attribution",url:"https://www.npr.org/sections/npr-training"}
+];
+let current=0,score=0,answered=false,audioCtx=null;
+function playTone(type){try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();let n=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type=type==="correct"?"sine":"triangle";o.frequency.setValueAtTime(type==="correct"?660:330,n);o.frequency.setValueAtTime(type==="correct"?880:220,n+.11);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.16,n+.02);g.gain.exponentialRampToValueAtTime(.0001,n+.3);o.start(n);o.stop(n+.31)}catch(e){}}
+function $(id){return document.getElementById(id)}
+function startQuiz(){current=0;score=0;$("quizCard").style.display="block";$("result").classList.remove("show");render()}
+function render(){let x=questions[current];$("progress").textContent=`Question ${current+1} of ${questions.length}`;$("score").textContent=`⭐ Score: ${score}`;$("question").textContent=x.q;$("choices").innerHTML="";$("feedback").className="feedback";$("source").innerHTML="";$("nextBtn").className="next";answered=false;x.choices.forEach((c,i)=>{let b=document.createElement("button");b.className="choice";let letter=document.createElement("span");letter.className="choice-letter";letter.textContent=String.fromCharCode(65+i);let text=document.createElement("span");text.textContent=c;b.appendChild(letter);b.appendChild(text);b.onclick=()=>answer(i,b);$("choices").appendChild(b)});$("progressFill").style.width=((current+1)/questions.length*100)+"%"}
+function answer(i,clicked){if(answered)return;answered=true;let x=questions[current],buttons=[...document.querySelectorAll(".choice")];buttons.forEach(b=>b.disabled=true);buttons[x.answer].classList.add("correct");let right=i===x.answer;playTone(right?"correct":"wrong");if(right){score++;clicked.classList.add("correct");$("feedback").className="feedback show correctBox";$("feedbackTitle").textContent="✓ Correct!"}else{clicked.classList.add("wrong");$("feedback").className="feedback show wrongBox";$("feedbackTitle").textContent="✗ Not quite."}$("feedbackText").textContent=x.explanation;$("source").innerHTML=`<a href="${x.url}" target="_blank" rel="noopener">${x.source} →</a>`;$("score").textContent=`Score: ${score}`;$("nextBtn").className="next show";$("nextBtn").textContent=current===questions.length-1?"See Results →":"Next Question →"}
+$("nextBtn").onclick=()=>{if(!answered)return;current++;if(current>=questions.length){$("quizCard").style.display="none";$("result").classList.add("show");$("finalScore").textContent=`${score}/${questions.length}`;$("finalMessage").textContent=score===10?"Excellent! You got every question right. Keep engaging with the news and sharing what you learn.":score>=6?"Nice work! You showed strong news knowledge. Keep reading, asking questions and engaging with reliable reporting.":"Keep practicing! News engagement is about more than getting every answer right. Read, question, discuss and keep learning."}else render()};
+startQuiz();
+</script>
+</body>
+</html>
